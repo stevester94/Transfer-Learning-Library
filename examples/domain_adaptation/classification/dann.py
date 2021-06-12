@@ -27,7 +27,8 @@ from common.utils.meter import AverageMeter, ProgressMeter
 from common.utils.logger import CompleteLogger
 from common.utils.analysis import collect_feature, tsne, a_distance
 
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+#device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+device = torch.device("cpu")
 
 
 def main(args: argparse.Namespace):
@@ -88,6 +89,22 @@ def main(args: argparse.Namespace):
 
     train_source_iter = ForeverDataIterator(train_source_loader)
     train_target_iter = ForeverDataIterator(train_target_loader)
+
+    """
+    BEGIN SMACKEY
+    """
+
+    train_source_loader = DataLoader(train_source_dataset, batch_size=None,
+                                     shuffle=True)
+
+    # SM: Ok so these are pytorch DataLoaders
+    print(train_source_loader.__class__.__name__)
+    for i in train_source_loader:
+        print(i[0].shape)
+        sys.exit(0)
+
+
+    sys.exit(0)
 
     # create model
     print("=> using pre-trained model '{}'".format(args.arch))
