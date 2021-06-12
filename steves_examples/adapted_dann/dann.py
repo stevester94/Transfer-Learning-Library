@@ -73,14 +73,18 @@ def main(args: argparse.Namespace):
     ])
 
     dataset = datasets.__dict__[args.data]
+
     train_source_dataset = dataset(root=args.root, task=args.source, download=True, transform=train_transform)
     train_source_loader = DataLoader(train_source_dataset, batch_size=args.batch_size,
                                      shuffle=True, num_workers=args.workers, drop_last=True)
+
     train_target_dataset = dataset(root=args.root, task=args.target, download=True, transform=train_transform)
     train_target_loader = DataLoader(train_target_dataset, batch_size=args.batch_size,
                                      shuffle=True, num_workers=args.workers, drop_last=True)
+
     val_dataset = dataset(root=args.root, task=args.target, download=True, transform=val_transform)
     val_loader = DataLoader(val_dataset, batch_size=args.batch_size, shuffle=False, num_workers=args.workers)
+
     if args.data == 'DomainNet':
         test_dataset = dataset(root=args.root, task=args.target, split='test', download=True, transform=val_transform)
         test_loader = DataLoader(test_dataset, batch_size=args.batch_size, shuffle=False, num_workers=args.workers)
@@ -94,14 +98,14 @@ def main(args: argparse.Namespace):
     BEGIN SMACKEY
     """
 
-    # train_source_loader = DataLoader(train_source_dataset, batch_size=None,
-    #                                  shuffle=True)
+    train_source_loader = DataLoader(train_source_dataset, batch_size=None,
+                                     shuffle=True)
 
-    # # SM: Ok so these are pytorch DataLoaders
-    # print(train_source_loader.__class__.__name__)
-    # for i in train_source_loader:
-    #     print(i[0].shape)
-    #     sys.exit(0)
+    # SM: Ok so these are pytorch DataLoaders
+    print(train_source_loader.__class__.__name__)
+    for i in train_source_loader:
+        print(i[0].shape)
+    sys.exit(0)
 
 
     # sys.exit(0)

@@ -7,6 +7,7 @@ CUDA_VISIBLE_DEVICES=0 python3 dann.py data/office31 -d Office31 -s A -t W -a re
 
 
 echo "done"
+exit 0
 
 CUDA_VISIBLE_DEVICES=0 python3 dann.py data/office31 -d Office31 -s D -t W -a resnet50 --epochs 20 --seed 1 --log logs/dann/Office31_D2W
 CUDA_VISIBLE_DEVICES=0 python3 dann.py data/office31 -d Office31 -s W -t D -a resnet50 --epochs 20 --seed 1 --log logs/dann/Office31_W2D
@@ -29,7 +30,7 @@ CUDA_VISIBLE_DEVICES=0 python3 dann.py data/office-home -d OfficeHome -s Rw -t C
 CUDA_VISIBLE_DEVICES=0 python3 dann.py data/office-home -d OfficeHome -s Rw -t Pr -a resnet50 --epochs 30 --seed 0 --log logs/dann/OfficeHome_Rw2Pr
 
 # VisDA-2017
-CUDA_VISIBLE_DEVICES=0 python33 dann.py data/visda-2017 -d VisDA2017 -s Synthetic -t Real -a resnet101 \
+CUDA_VISIBLE_DEVICES=0 python3 dann.py data/visda-2017 -d VisDA2017 -s Synthetic -t Real -a resnet101 \
     --epochs 30 --seed 0 --per-class-eval --center-crop --log logs/dann/VisDA2017
 
 # DomainNet
