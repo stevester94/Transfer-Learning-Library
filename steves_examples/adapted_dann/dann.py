@@ -27,8 +27,8 @@ from common.utils.meter import AverageMeter, ProgressMeter
 from common.utils.logger import CompleteLogger
 from common.utils.analysis import collect_feature, tsne, a_distance
 
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-# device = torch.device("cpu")
+# device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+device = torch.device("cpu")
 
 
 def main(args: argparse.Namespace):
@@ -74,38 +74,102 @@ def main(args: argparse.Namespace):
 
     dataset = datasets.__dict__[args.data]
 
-    train_source_dataset = dataset(root=args.root, task=args.source, download=True, transform=train_transform)
+
+    class DummyDataset(torch.utils.data.Dataset):
+        def __init__(self):
+            self.t = torch.ones(2, 224).to(device)
+
+        def __getitem__(self, index):
+            return (
+                self.t,
+                10
+            )
+
+        def __len__(self):
+            return 1000
+
+        @property
+        def num_classes(self):
+            # raise Exception("Really?")
+            return 20
+
+        # @classmethod
+        # def domains(cls):
+        #     return list(cls.image_list.keys())
+
+    # train_source_dataset = dataset(root=args.root, task=args.source, download=True, transform=train_transform)
+
+
+    # print(train_source_dataset.num_classes)
+    # sys.exit(1)
+
+
+    # train_source_loader = DataLoader(train_source_dataset, batch_size=args.batch_size,
+    #                                  shuffle=True, num_workers=args.workers, drop_last=True)
+
+    # train_target_dataset = dataset(root=args.root, task=args.target, download=True, transform=train_transform)
+    # train_target_loader = DataLoader(train_target_dataset, batch_size=args.batch_size,
+    #                                  shuffle=True, num_workers=args.workers, drop_last=True)
+
+    # val_dataset = dataset(root=args.root, task=args.target, download=True, transform=val_transform)
+    # val_loader = DataLoader(val_dataset, batch_size=args.batch_size, shuffle=False, num_workers=args.workers)
+
+    # if args.data == 'DomainNet':
+    #     test_dataset = dataset(root=args.root, task=args.target, split='test', download=True, transform=val_transform)
+    #     test_loader = DataLoader(test_dataset, batch_size=args.batch_size, shuffle=False, num_workers=args.workers)
+    # else:
+    #     test_loader = val_loader
+
+    # train_source_iter = ForeverDataIterator(train_source_loader)
+    # train_target_iter = ForeverDataIterator(train_target_loader)
+
+
+    train_source_dataset = DummyDataset()
     train_source_loader = DataLoader(train_source_dataset, batch_size=args.batch_size,
                                      shuffle=True, num_workers=args.workers, drop_last=True)
 
-    train_target_dataset = dataset(root=args.root, task=args.target, download=True, transform=train_transform)
+    train_target_dataset = DummyDataset()
     train_target_loader = DataLoader(train_target_dataset, batch_size=args.batch_size,
                                      shuffle=True, num_workers=args.workers, drop_last=True)
 
-    val_dataset = dataset(root=args.root, task=args.target, download=True, transform=val_transform)
+    val_dataset = DummyDataset()
     val_loader = DataLoader(val_dataset, batch_size=args.batch_size, shuffle=False, num_workers=args.workers)
 
     if args.data == 'DomainNet':
         test_dataset = dataset(root=args.root, task=args.target, split='test', download=True, transform=val_transform)
         test_loader = DataLoader(test_dataset, batch_size=args.batch_size, shuffle=False, num_workers=args.workers)
     else:
+        # SM: We are dropping to here
         test_loader = val_loader
 
     train_source_iter = ForeverDataIterator(train_source_loader)
     train_target_iter = ForeverDataIterator(train_target_loader)
 
+
+
     """
     BEGIN SMACKEY
+
+    images are ( torch.Size([3, 224, 224]), () )
     """
 
-    train_source_loader = DataLoader(train_source_dataset, batch_size=None,
-                                     shuffle=True)
+
+
+
+    # dds = DummyDataset()
+
+
+
+    # sys.exit(0)
+
+    # train_source_loader = DataLoader(dds, batch_size=None,
+    #                                  shuffle=True)
 
     # SM: Ok so these are pytorch DataLoaders
-    print(train_source_loader.__class__.__name__)
-    for i in train_source_loader:
-        print(i[0].shape)
-    sys.exit(0)
+    # print(train_source_loader.__class__.__name__)
+    # for i in train_source_loader:
+    #     print(i[0].shape)
+    # sys.exit(0)
 
 
     # sys.exit(0)
